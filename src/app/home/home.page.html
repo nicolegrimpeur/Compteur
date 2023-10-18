@@ -13,8 +13,40 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let team of tabTeams, index as i" class="center">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-row>
+                <ion-col class="center">
+                  {{team.name}}
+                </ion-col>
+                <ion-col class="right">
+                  <ion-button color="medium" shape="round" fill="clear" (click)="editTeam(team)" class="edit">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </ion-button>
+
+                </ion-col>
+              </ion-row>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <round-progress [current]="tabTimer[i].currentTime" [max]="team.maxTime" [clockwise]="false"
+                            [color]="'#808289'"></round-progress>
+            {{tabTimer[i].currentTime}} / {{team.maxTime}}
+          </ion-card-content>
+          <ion-card-content class="center">
+
+            <ion-button color="medium" [id]="'button' + team.id" (click)="launchTimer(team)">
+              <ion-icon name="play" slot="start"></ion-icon>
+              Lancer
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>
