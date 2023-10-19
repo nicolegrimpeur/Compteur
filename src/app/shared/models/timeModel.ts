@@ -1,4 +1,4 @@
-export class TimerModel {
+export class TimeModel {
   currentTime: number;
   event: any;
 }

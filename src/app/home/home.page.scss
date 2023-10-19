@@ -3,8 +3,10 @@ ion-card {
 }
 
 .center {
-  display: grid;
-  place-items: center;
+  //display: grid;
+  //place-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .right {

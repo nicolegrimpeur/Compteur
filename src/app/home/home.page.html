@@ -1,45 +1,62 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Minuteur{{(tabTimer.length > 1) ? 's' : ''}}
     </ion-title>
+    <ion-button id="nbEquipes" color="medium" slot="end" fill="clear">
+      Nombre de minuteurs : {{tabTimer.length}}
+    </ion-button>
+  <ion-picker
+    trigger="nbEquipes"
+    [columns]="pickerColumns"
+    [buttons]="[
+      {text: 'Annuler', role: 'cancel'},
+      {text: 'Valider', role: 'confirm'}
+    ]"
+    (didDismiss)="changeNbTimer($event)"
+    ></ion-picker>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-grid>
-    <ion-row>
-      <ion-col *ngFor="let team of tabTeams, index as i" class="center">
+    <ion-row class="center">
+      <ion-col *ngFor="let timer of tabTimer, index as i" class="center" size="auto">
         <ion-card>
           <ion-card-header>
             <ion-card-title>
               <ion-row>
                 <ion-col class="center">
-                  {{team.name}}
+                  {{timer.name}}
                 </ion-col>
                 <ion-col class="right">
-                  <ion-button color="medium" shape="round" fill="clear" (click)="editTeam(team)" class="edit">
+                  <ion-button [id]="'editButton' + timer.id" color="medium" shape="round" fill="clear" class="edit">
                     <ion-icon name="create-outline"></ion-icon>
                   </ion-button>
-
+                  <ion-alert
+                    [trigger]="'editButton' + timer.id"
+                    [header]="'Modifier l\'équipe ' + timer.name"
+                    [inputs]="[{placeholder: timer.name}, {placeholder: 'Temps maximum', type: 'number', value: timer.maxTime}]"
+                    [buttons]="[{text: 'Annuler', role: 'cancel'}, {text: 'Valider', role: 'confirm'}]"
+                    (didDismiss)="editTimer($event, timer)"
+                  ></ion-alert>
                 </ion-col>
               </ion-row>
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <round-progress [current]="tabTimer[i].currentTime" [max]="team.maxTime" [clockwise]="false"
-                            [color]="'#808289'"></round-progress>
-            {{tabTimer[i].currentTime}} / {{team.maxTime}}
+            <!-- https://github.com/crisbeto/angular-svg-round-progressbar -->
+            <round-progress
+              [current]="tabTime[i].currentTime"
+              [max]="timer.maxTime"
+              [rounded]="true"
+              [color]="'#808289'"
+            ></round-progress>
+            {{tabTime[i].currentTime}} / {{timer.maxTime}}
           </ion-card-content>
           <ion-card-content class="center">
 
-            <ion-button color="medium" [id]="'button' + team.id" (click)="launchTimer(team)">
+            <ion-button color="medium" [id]="'button' + timer.id" (click)="launchTimer(timer)">
               <ion-icon name="play" slot="start"></ion-icon>
               Lancer
             </ion-button>
