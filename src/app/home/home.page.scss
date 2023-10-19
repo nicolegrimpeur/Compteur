@@ -9,13 +9,22 @@ ion-card {
   justify-content: center;
 }
 
+.centerVertical {
+  display: flex;
+  align-items: center;
+}
+
 .right {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 
-.edit {
-  --padding-start: 0;
+.edit, .delete {
+  --padding-start: 1vh;
   --padding-end: 0;
+}
+
+.bigIcon {
+  font-size: 2rem;
 }

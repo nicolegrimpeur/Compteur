@@ -26,10 +26,10 @@
           <ion-card-header>
             <ion-card-title>
               <ion-row>
-                <ion-col class="center">
+                <ion-col class="centerVertical">
                   {{timer.name}}
                 </ion-col>
-                <ion-col class="right">
+                <ion-col class="right" size="auto">
                   <ion-button [id]="'editButton' + timer.id" color="medium" shape="round" fill="clear" class="edit">
                     <ion-icon name="create-outline"></ion-icon>
                   </ion-button>
@@ -40,6 +40,11 @@
                     [buttons]="[{text: 'Annuler', role: 'cancel'}, {text: 'Valider', role: 'confirm'}]"
                     (didDismiss)="editTimer($event, timer)"
                   ></ion-alert>
+                </ion-col>
+                <ion-col class="right" size="auto">
+                  <ion-button color="medium" shape="round" fill="clear" class="delete" (click)="deleteTimer(timer)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
                 </ion-col>
               </ion-row>
             </ion-card-title>
@@ -57,9 +62,28 @@
           <ion-card-content class="center">
 
             <ion-button color="medium" [id]="'button' + timer.id" (click)="launchTimer(timer)">
-              <ion-icon name="play" slot="start"></ion-icon>
+              <ion-icon name="play-outline" slot="start"></ion-icon>
               Lancer
             </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="center">
+        <ion-card>
+          <ion-card-content>
+            <ion-buttons>
+              <ion-button color="medium" (click)="pauseAllTimer()">
+                <ion-icon name="pause-outline" class="bigIcon"></ion-icon>
+              </ion-button>
+              <ion-button color="medium" (click)="resetAllTimer()">
+                <ion-icon name="refresh-outline" class="bigIcon"></ion-icon>
+              </ion-button>
+              <ion-button color="medium" (click)="saveConfig()">
+                <ion-icon name="save-outline" class="bigIcon"></ion-icon>
+              </ion-button>
+            </ion-buttons>
           </ion-card-content>
         </ion-card>
       </ion-col>
