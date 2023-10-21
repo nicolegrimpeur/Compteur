@@ -6,14 +6,14 @@
     <ion-button id="nbEquipes" color="medium" slot="end" fill="clear">
       Nombre de minuteurs : {{tabTimer.length}}
     </ion-button>
-  <ion-picker
-    trigger="nbEquipes"
-    [columns]="pickerColumns"
-    [buttons]="[
+    <ion-picker
+      trigger="nbEquipes"
+      [columns]="pickerColumns"
+      [buttons]="[
       {text: 'Annuler', role: 'cancel'},
       {text: 'Valider', role: 'confirm'}
     ]"
-    (didDismiss)="changeNbTimer($event)"
+      (didDismiss)="changeNbTimer($event)"
     ></ion-picker>
   </ion-toolbar>
 </ion-header>
@@ -36,7 +36,7 @@
                   <ion-alert
                     [trigger]="'editButton' + timer.id"
                     [header]="'Modifier l\'équipe ' + timer.name"
-                    [inputs]="[{placeholder: timer.name}, {placeholder: 'Temps maximum', type: 'number', value: timer.maxTime}]"
+                    [inputs]="[{placeholder: timer.name}, {placeholder: 'Temps maximum (en secondes)', type: 'number', value: timer.maxTime}]"
                     [buttons]="[{text: 'Annuler', role: 'cancel'}, {text: 'Valider', role: 'confirm'}]"
                     (didDismiss)="editTimer($event, timer)"
                   ></ion-alert>
@@ -58,7 +58,7 @@
               [color]="'#808289'"
             ></round-progress>
             <div class="display-current">
-              {{tabTime[i].currentTime}} / {{timer.maxTime}}
+              {{formatTime(tabTime[i].currentTime)}} / {{formatTime(timer.maxTime)}}
             </div>
           </ion-card-content>
           <ion-card-content class="center-horizontal">

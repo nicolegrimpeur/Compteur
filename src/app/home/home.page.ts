@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {TimerModel} from "../shared/models/timerModel";
 import {TimeModel} from "../shared/models/timeModel";
 import {StorageService} from "../core/storage/storage.service";
+import {ToastService} from "../shared/class/toast/toast.service";
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ export class HomePage {
   public pickerColumns = [
     {
       name: 'nbTimer',
-      options: Array.from({ length: 10 }, (_, index) => {
+      options: Array.from({length: 10}, (_, index) => {
         return {
           text: (index + 1).toString(),
           value: index + 1
@@ -34,7 +35,10 @@ export class HomePage {
     }
   ]
 
-  constructor(private storageService: StorageService) {
+  constructor(
+    private storageService: StorageService,
+    private toastService: ToastService
+  ) {
   }
 
   ionViewWillEnter() {
@@ -77,7 +81,6 @@ export class HomePage {
   }
 
   editTimer(ev: any, timer: TimerModel) {
-    console.log(ev.detail.data.values[1]);
     if (ev.detail.role === 'confirm') {
       if (ev.detail.data.values[0] !== '') {
         timer.name = ev.detail.data.values[0];
@@ -86,6 +89,7 @@ export class HomePage {
         timer.maxTime = ev.detail.data.values[1];
         this.tabTime[timer.id - 1].currentTime = timer.maxTime;
       }
+      this.toastService.presentToast({message: 'Compteur modifié', color: 'success'}).then();
     }
   }
 
@@ -99,8 +103,7 @@ export class HomePage {
       clearInterval(time.event);
       time.currentTime = this.tabTimer[index].maxTime;
     });
-    console.log(this.tabTimer);
-    console.log(this.tabTime);
+    this.toastService.presentToast({message: 'Compteur supprimé', color: 'success'}).then();
   }
 
   launchTimer(timer: TimerModel) {
@@ -111,6 +114,13 @@ export class HomePage {
         this.tabTime[timer.id - 1].currentTime--;
       }
     }, 1000);
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
   pauseAllTimer() {
@@ -127,6 +137,12 @@ export class HomePage {
   }
 
   saveConfig() {
-    this.storageService.saveConfig(this.tabTimer).then();
+    this.storageService.saveConfig(this.tabTimer)
+      .then(() => {
+        this.toastService.presentToast({message: 'Configuration sauvegardée', color: 'success'}).then();
+      })
+      .catch(() => {
+        this.toastService.presentToast({message: 'Erreur lors de la sauvegarde', color: 'danger'}).then();
+      });
   }
 }
