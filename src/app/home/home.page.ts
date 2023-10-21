@@ -3,6 +3,7 @@ import {TimerModel} from "../shared/models/timerModel";
 import {TimeModel} from "../shared/models/timeModel";
 import {StorageService} from "../core/storage/storage.service";
 import {ToastService} from "../shared/class/toast/toast.service";
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,8 @@ export class HomePage {
 
   constructor(
     private storageService: StorageService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private platform: Platform
   ) {
   }
 
@@ -144,5 +146,20 @@ export class HomePage {
       .catch(() => {
         this.toastService.presentToast({message: 'Erreur lors de la sauvegarde', color: 'danger'}).then();
       });
+  }
+
+  styleFooter() {
+    // si l'on est sur mobile, on le positionne à la suite du contenu, sinon on le positionne en bas de l'écran
+    if (this.platform.is('mobile')) {
+      return {
+        'margin-top': '5vh',
+      }
+    } else {
+      return {
+        'position': 'absolute',
+        'bottom': '0',
+        'width': '100%'
+      }
+    }
   }
 }
