@@ -20,13 +20,13 @@
 
 <ion-content [fullscreen]="true">
   <ion-grid>
-    <ion-row class="center">
-      <ion-col *ngFor="let timer of tabTimer, index as i" class="center" size="auto">
+    <ion-row class="center-horizontal">
+      <ion-col *ngFor="let timer of tabTimer, index as i" class="center-horizontal" size="auto">
         <ion-card>
           <ion-card-header>
             <ion-card-title>
               <ion-row>
-                <ion-col class="centerVertical">
+                <ion-col class="center-vertical">
                   {{timer.name}}
                 </ion-col>
                 <ion-col class="right" size="auto">
@@ -49,7 +49,7 @@
               </ion-row>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content class="progress-wrapper center-horizontal center-vertical">
             <!-- https://github.com/crisbeto/angular-svg-round-progressbar -->
             <round-progress
               [current]="tabTime[i].currentTime"
@@ -57,10 +57,11 @@
               [rounded]="true"
               [color]="'#808289'"
             ></round-progress>
-            {{tabTime[i].currentTime}} / {{timer.maxTime}}
+            <div class="display-current">
+              {{tabTime[i].currentTime}} / {{timer.maxTime}}
+            </div>
           </ion-card-content>
-          <ion-card-content class="center">
-
+          <ion-card-content class="center-horizontal">
             <ion-button color="medium" [id]="'button' + timer.id" (click)="launchTimer(timer)">
               <ion-icon name="play-outline" slot="start"></ion-icon>
               Lancer
@@ -70,7 +71,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col class="center">
+      <ion-col class="center-horizontal">
         <ion-card>
           <ion-card-content>
             <ion-buttons>
