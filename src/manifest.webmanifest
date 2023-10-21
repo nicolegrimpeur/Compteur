@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Timmeer",
+  "short_name": "Timmeer",
   "theme_color": "#172854",
   "background_color": "#d2d3d5",
   "display": "standalone",
