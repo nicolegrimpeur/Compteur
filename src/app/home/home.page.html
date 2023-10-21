@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title color="primary">
       Minuteur{{(tabTimer.length > 1) ? 's' : ''}}
     </ion-title>
-    <ion-button id="nbEquipes" color="medium" slot="end" fill="clear">
+    <ion-button color="primary" id="nbEquipes" slot="end" fill="clear">
       Nombre de minuteurs : {{tabTimer.length}}
     </ion-button>
     <ion-picker
@@ -22,15 +22,15 @@
   <ion-grid>
     <ion-row class="center-horizontal">
       <ion-col *ngFor="let timer of tabTimer, index as i" class="center-horizontal" size="auto">
-        <ion-card>
+        <ion-card color="">
           <ion-card-header>
-            <ion-card-title>
+            <ion-card-title color="primary">
               <ion-row>
                 <ion-col class="center-vertical">
                   {{timer.name}}
                 </ion-col>
                 <ion-col class="right" size="auto">
-                  <ion-button [id]="'editButton' + timer.id" color="medium" shape="round" fill="clear" class="edit">
+                  <ion-button [id]="'editButton' + timer.id" color="primary" shape="round" fill="clear" class="edit">
                     <ion-icon name="create-outline"></ion-icon>
                   </ion-button>
                   <ion-alert
@@ -42,7 +42,7 @@
                   ></ion-alert>
                 </ion-col>
                 <ion-col class="right" size="auto">
-                  <ion-button color="medium" shape="round" fill="clear" class="delete" (click)="deleteTimer(timer)">
+                  <ion-button color="primary" shape="round" fill="clear" class="delete" (click)="deleteTimer(timer)">
                     <ion-icon name="close-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
@@ -55,14 +55,14 @@
               [current]="tabTime[i].currentTime"
               [max]="timer.maxTime"
               [rounded]="true"
-              [color]="'#808289'"
+              [color]="'#d2d3d5'"
             ></round-progress>
             <div class="display-current">
               {{formatTime(tabTime[i].currentTime)}} / {{formatTime(timer.maxTime)}}
             </div>
           </ion-card-content>
           <ion-card-content class="center-horizontal">
-            <ion-button color="medium" [id]="'button' + timer.id" (click)="launchTimer(timer)">
+            <ion-button color="secondary" [id]="'button' + timer.id" (click)="launchTimer(timer)">
               <ion-icon name="play-outline" slot="start"></ion-icon>
               Lancer
             </ion-button>
