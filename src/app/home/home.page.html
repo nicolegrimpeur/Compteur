@@ -89,6 +89,49 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row class="center-horizontal">
+      <ion-col size="auto">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              Raccourcis clavier
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label class="center-vertical ion-text-wrap">
+                  <ion-icon name="play-outline" slot="start" class="raccourcisIcon"></ion-icon>
+                  Lancer le minuteur / mettre en pause un minuteur
+                </ion-label>
+                <ion-note slot="end">Id</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label class="center-vertical ion-text-wrap">
+                  <ion-icon name="pause-outline" slot="start" class="raccourcisIcon"></ion-icon>
+                  Mettre en pause tous les minuteurs
+                </ion-label>
+                <ion-note slot="end">Espace</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label class="center-vertical ion-text-wrap">
+                  <ion-icon name="refresh-outline" slot="start" class="raccourcisIcon"></ion-icon>
+                  Réinitialiser le minuteur
+                </ion-label>
+                <ion-note slot="end">Echap</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label class="center-vertical ion-text-wrap">
+                  <ion-icon name="save-outline" slot="start" class="raccourcisIcon"></ion-icon>
+                  Sauvegarder la configuration
+                </ion-label>
+                <ion-note slot="end">S</ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
   <div class="center-horizontal" [ngStyle]="styleFooter()">
     <ion-button color="medium" href="https://github.com/nicolegrimpeur/Timmeer" target="_blank"
