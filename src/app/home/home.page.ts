@@ -15,12 +15,12 @@ export class HomePage {
     {
       id: 1,
       name: 'Compteur 1',
-      maxTime: 10
+      maxTime: 60
     }
   ];
   public tabTime: Array<TimeModel> = [
     {
-      currentTime: 10,
+      currentTime: 60,
       event: null
     }
   ];
@@ -34,7 +34,7 @@ export class HomePage {
         }
       })
     }
-  ]
+  ];
 
   constructor(
     private storageService: StorageService,
@@ -62,7 +62,6 @@ export class HomePage {
 
   @HostListener('document:keydown', ['$event'])
   keyDownFunction(event: any) {
-    console.log(event.code);
     if (event.code === 'Space') {
       this.pauseAllTimer();
     } else if (event.code === 'Escape') {
@@ -76,8 +75,7 @@ export class HomePage {
         const nb = parseInt(matchNb[0]);
         if (nb <= this.tabTimer.length) {
           if (this.tabTime[nb - 1].event) {
-            clearInterval(this.tabTime[nb - 1].event);
-            this.tabTime[nb - 1].event = null;
+            this.pauseTimer(this.tabTimer[nb - 1]);
           } else {
             this.launchTimer(this.tabTimer[nb - 1]);
           }
@@ -93,10 +91,10 @@ export class HomePage {
         this.tabTimer.push({
           id: i,
           name: 'Compteur ' + i,
-          maxTime: 10
+          maxTime: 60
         });
         this.tabTime.push({
-          currentTime: 10,
+          currentTime: 60,
           event: null
         });
       }
@@ -148,6 +146,18 @@ export class HomePage {
     }
   }
 
+  pauseTimer(timer: TimerModel) {
+    if (this.tabTime[timer.id - 1].event) {
+      clearInterval(this.tabTime[timer.id - 1].event);
+      this.tabTime[timer.id - 1].event = null;
+    }
+  }
+
+  resetTimer(timer: TimerModel) {
+    this.pauseTimer(timer);
+    this.tabTime[timer.id - 1].currentTime = timer.maxTime;
+  }
+
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -162,10 +172,8 @@ export class HomePage {
   }
 
   resetAllTimer() {
-    this.tabTime.forEach((time, index) => {
-      clearInterval(time.event);
-      time.event = null;
-      time.currentTime = this.tabTimer[index].maxTime;
+    this.tabTime.forEach((time: TimeModel, index) => {
+      this.resetTimer(this.tabTimer[index]);
     });
   }
 
