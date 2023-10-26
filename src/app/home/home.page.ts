@@ -5,7 +5,6 @@ import {StorageService} from "../core/storage/storage.service";
 import {ToastService} from "../shared/class/toast/toast.service";
 import {Platform} from "@ionic/angular";
 import {Clipboard} from "@capacitor/clipboard";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -42,43 +41,25 @@ export class HomePage {
   constructor(
     private storageService: StorageService,
     private toastService: ToastService,
-    private platform: Platform,
-    private router: Router
+    private platform: Platform
   ) {
   }
 
   ionViewWillEnter() {
-    const base64Config = this.router.parseUrl(this.router.url).queryParams['config'];
-    const config = base64Config ? JSON.parse(atob(base64Config)) : null;
-    console.log(config);
-    console.log(this.router.parseUrl(this.router.url).queryParams['config']);
-
-    if (config) {
-      this.tabTimer = config;
-      this.tabTime = [];
-      config.forEach((timer: TimerModel) => {
-        this.tabTime.push({
-          currentTime: timer.maxTime,
-          event: null
-        });
-      });
-      this.isKeyActive = false;
-    } else {
-      this.storageService.getConfig().then((config) => {
-        if (config) {
-          this.tabTimer = config;
-          this.tabTime = [];
-          config.forEach((timer) => {
-            this.tabTime.push({
-              currentTime: timer.maxTime,
-              event: null
-            });
+    this.storageService.getConfig().then((config) => {
+      if (config) {
+        this.tabTimer = config;
+        this.tabTime = [];
+        config.forEach((timer) => {
+          this.tabTime.push({
+            currentTime: timer.maxTime,
+            event: null
           });
-        } else {
-          this.storageService.saveConfig(this.tabTimer).then();
-        }
-      });
-    }
+        });
+      } else {
+        this.storageService.saveConfig(this.tabTimer).then();
+      }
+    });
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -224,11 +205,31 @@ export class HomePage {
       });
   }
 
+  importConfig(ev: any) {
+    if (ev.detail.role === 'confirm') {
+      const config = JSON.parse(atob(ev.detail.data.values[0]));
+      if (config) {
+        this.tabTimer = config;
+        this.tabTime = [];
+        config.forEach((timer: TimerModel) => {
+          this.tabTime.push({
+            currentTime: timer.maxTime,
+            event: null
+          });
+        });
+        this.toastService.presentToast({message: 'Configuration importée', color: 'success'}).then();
+      } else {
+        this.toastService.presentToast({message: 'Erreur lors de l\'importation', color: 'danger'}).then();
+      }
+    }
+    this.isKeyActive = true;
+  }
+
   shareConfig() {
     const url = window.location.href;
     console.log(url);
     Clipboard.write({
-      string: window.location.href + '?config=' + btoa(JSON.stringify(this.tabTimer))
+      string: btoa(JSON.stringify(this.tabTimer))
     })
       .then(() => {
         this.toastService.presentToast({
@@ -242,20 +243,5 @@ export class HomePage {
           color: 'danger'
         }).then();
       });
-  }
-
-  styleFooter() {
-    // si l'on est sur mobile, on le positionne à la suite du contenu, sinon on le positionne en bas de l'écran
-    if (this.platform.is('mobile')) {
-      return {
-        'margin-top': '5vh',
-      }
-    } else {
-      return {
-        'position': 'absolute',
-        'bottom': '0',
-        'width': '100%'
-      }
-    }
   }
 }

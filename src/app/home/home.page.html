@@ -172,11 +172,35 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row class="center-horizontal">
+      <ion-col size="auto">
+        <ion-card>
+          <ion-card-content>
+            <ion-buttons>
+              <ion-button color="medium" id="importConfigButton">
+                <ion-icon name="download-outline" size="large"></ion-icon>
+              </ion-button>
+              <ion-alert
+                trigger="importConfigButton"
+                header="Veuillez coller la configuration ici"
+                [inputs]="[{placeholder: 'Configuration', type: 'textarea'}]"
+                [buttons]="[{text: 'Annuler', role: 'cancel'}, {text: 'Valider', role: 'confirm'}]"
+                (willPresent)="isKeyActive = false"
+                (didDismiss)="importConfig($event)"
+              ></ion-alert>
+              <ion-button color="medium" (click)="shareConfig()">
+                <ion-icon name="share-social-outline" size="large"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
-  <div class="center-horizontal" [ngStyle]="styleFooter()">
+  <div class="center-horizontal footer">
     <ion-button color="medium" href="https://github.com/nicolegrimpeur/Timmeer" target="_blank"
                 fill="clear" shape="round">
-      <ion-icon name="logo-github" class="bigIcon"></ion-icon>
+      <ion-icon name="logo-github" size="large"></ion-icon>
     </ion-button>
   </div>
 
