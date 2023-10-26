@@ -4,6 +4,8 @@ import {TimeModel} from "../shared/models/timeModel";
 import {StorageService} from "../core/storage/storage.service";
 import {ToastService} from "../shared/class/toast/toast.service";
 import {Platform} from "@ionic/angular";
+import {Clipboard} from "@capacitor/clipboard";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -40,25 +42,43 @@ export class HomePage {
   constructor(
     private storageService: StorageService,
     private toastService: ToastService,
-    private platform: Platform
+    private platform: Platform,
+    private router: Router
   ) {
   }
 
   ionViewWillEnter() {
-    this.storageService.getConfig().then((config) => {
-      if (config) {
-        this.tabTimer = config;
-        this.tabTime = [];
-        config.forEach((timer) => {
-          this.tabTime.push({
-            currentTime: timer.maxTime,
-            event: null
-          });
+    const base64Config = this.router.parseUrl(this.router.url).queryParams['config'];
+    const config = base64Config ? JSON.parse(atob(base64Config)) : null;
+    console.log(config);
+    console.log(this.router.parseUrl(this.router.url).queryParams['config']);
+
+    if (config) {
+      this.tabTimer = config;
+      this.tabTime = [];
+      config.forEach((timer: TimerModel) => {
+        this.tabTime.push({
+          currentTime: timer.maxTime,
+          event: null
         });
-      } else {
-        this.storageService.saveConfig(this.tabTimer).then();
-      }
-    });
+      });
+      this.isKeyActive = false;
+    } else {
+      this.storageService.getConfig().then((config) => {
+        if (config) {
+          this.tabTimer = config;
+          this.tabTime = [];
+          config.forEach((timer) => {
+            this.tabTime.push({
+              currentTime: timer.maxTime,
+              event: null
+            });
+          });
+        } else {
+          this.storageService.saveConfig(this.tabTimer).then();
+        }
+      });
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -201,6 +221,26 @@ export class HomePage {
       })
       .catch(() => {
         this.toastService.presentToast({message: 'Erreur lors de la sauvegarde', color: 'danger'}).then();
+      });
+  }
+
+  shareConfig() {
+    const url = window.location.href;
+    console.log(url);
+    Clipboard.write({
+      string: window.location.href + '?config=' + btoa(JSON.stringify(this.tabTimer))
+    })
+      .then(() => {
+        this.toastService.presentToast({
+          message: 'Configuration copiée dans le presse-papier',
+          color: 'success'
+        }).then();
+      })
+      .catch(() => {
+        this.toastService.presentToast({
+          message: 'Erreur lors de la copie de la configuration',
+          color: 'danger'
+        }).then();
       });
   }
 
