@@ -19,8 +19,8 @@ ion-card {
 }
 
 .edit, .delete {
-  --padding-start: 1vh;
-  --padding-end: 0;
+  --padding-start: 0.5vh;
+  --padding-end: 0.5vh;
 }
 
 .progress-wrapper {
@@ -34,7 +34,7 @@ ion-card {
 }
 
 .bigIcon {
-  font-size: 2rem;
+  //font-size: 2rem;
 }
 
 .raccourcisIcon {

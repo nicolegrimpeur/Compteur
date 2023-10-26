@@ -24,7 +24,7 @@ export class HomePage {
       event: null
     }
   ];
-  public pickerColumns = [
+  public pickerColumnsNumberTimer = [
     {
       name: 'nbTimer',
       options: Array.from({length: 10}, (_, index) => {
@@ -35,6 +35,7 @@ export class HomePage {
       })
     }
   ];
+  public isKeyActive = true;
 
   constructor(
     private storageService: StorageService,
@@ -62,22 +63,24 @@ export class HomePage {
 
   @HostListener('document:keydown', ['$event'])
   keyDownFunction(event: any) {
-    if (event.code === 'Space') {
-      this.pauseAllTimer();
-    } else if (event.code === 'Escape') {
-      this.resetAllTimer();
-    } else if (event.code === 'KeyS') {
-      this.saveConfig();
-    } else {
-      const matchNb = event.code.match(/\d+/g);
+    if (this.isKeyActive) {
+      if (event.code === 'Space') {
+        this.pauseAllTimer();
+      } else if (event.code === 'Escape') {
+        this.resetAllTimer();
+      } else if (event.code === 'KeyS') {
+        this.saveConfig();
+      } else {
+        const matchNb = event.code.match(/\d+/g);
 
-      if (matchNb) {
-        const nb = parseInt(matchNb[0]);
-        if (nb <= this.tabTimer.length) {
-          if (this.tabTime[nb - 1].event) {
-            this.pauseTimer(this.tabTimer[nb - 1]);
-          } else {
-            this.launchTimer(this.tabTimer[nb - 1]);
+        if (matchNb) {
+          const nb = parseInt(matchNb[0]);
+          if (nb <= this.tabTimer.length) {
+            if (this.tabTime[nb - 1].event) {
+              this.pauseTimer(this.tabTimer[nb - 1]);
+            } else {
+              this.launchTimer(this.tabTimer[nb - 1]);
+            }
           }
         }
       }
@@ -104,6 +107,7 @@ export class HomePage {
         this.tabTime.pop();
       }
     }
+    this.isKeyActive = true;
   }
 
   editTimer(ev: any, timer: TimerModel) {
@@ -111,12 +115,21 @@ export class HomePage {
       if (ev.detail.data.values[0] !== '') {
         timer.name = ev.detail.data.values[0];
       }
-      if (ev.detail.data.values[1] !== '') {
-        timer.maxTime = ev.detail.data.values[1];
-        this.tabTime[timer.id - 1].currentTime = timer.maxTime;
+
+      if (ev.detail.data.values[1] !== '' && ev.detail.data.values[2] !== '') {
+        timer.maxTime = parseInt(ev.detail.data.values[1]) * 60 + parseInt(ev.detail.data.values[2]);
+      } else if (ev.detail.data.values[1] !== '') {
+        const newMinutes = parseInt(ev.detail.data.values[1]);
+        timer.maxTime = newMinutes * 60 + timer.maxTime % 60;
+      } else if (ev.detail.data.values[2] !== '') {
+        const newSeconds = parseInt(ev.detail.data.values[2]);
+        timer.maxTime = this.getMinutesFromSeconds(timer.maxTime) * 60 + newSeconds;
       }
+
+      this.tabTime[timer.id - 1].currentTime = timer.maxTime;
       this.toastService.presentToast({message: 'Compteur modifié', color: 'success'}).then();
     }
+    this.isKeyActive = true;
   }
 
   deleteTimer(timer: TimerModel) {
@@ -156,6 +169,10 @@ export class HomePage {
   resetTimer(timer: TimerModel) {
     this.pauseTimer(timer);
     this.tabTime[timer.id - 1].currentTime = timer.maxTime;
+  }
+
+  getMinutesFromSeconds(seconds: number): number {
+    return Math.floor(seconds / 60);
   }
 
   formatTime(seconds: number): string {

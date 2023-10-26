@@ -8,11 +8,12 @@
     </ion-button>
     <ion-picker
       trigger="nbEquipes"
-      [columns]="pickerColumns"
+      [columns]="pickerColumnsNumberTimer"
       [buttons]="[
       {text: 'Annuler', role: 'cancel'},
       {text: 'Valider', role: 'confirm'}
     ]"
+      (willPresent)="isKeyActive = false"
       (didDismiss)="changeNbTimer($event)"
     ></ion-picker>
   </ion-toolbar>
@@ -44,19 +45,24 @@
                 <ion-col class="center-vertical">
                   {{timer.name}}
                 </ion-col>
-                <ion-col class="right" size="auto">
+                <ion-col class="right ion-no-padding" size="auto">
                   <ion-button [id]="'editButton' + timer.id" color="primary" shape="round" fill="clear" class="edit">
                     <ion-icon name="create-outline"></ion-icon>
                   </ion-button>
                   <ion-alert
                     [trigger]="'editButton' + timer.id"
                     [header]="'Modifier l\'équipe ' + timer.name"
-                    [inputs]="[{placeholder: timer.name}, {placeholder: 'Temps maximum (en secondes)', type: 'number', value: timer.maxTime}]"
+                    [inputs]="[
+                    {placeholder: 'Nom : ' + timer.name},
+                    {placeholder: 'Minutes : ' + getMinutesFromSeconds(timer.maxTime), type: 'number'},
+                    {placeholder: 'Secondes : ' + timer.maxTime % 60, type: 'number'}
+                    ]"
                     [buttons]="[{text: 'Annuler', role: 'cancel'}, {text: 'Valider', role: 'confirm'}]"
+                    (willPresent)="isKeyActive = false"
                     (didDismiss)="editTimer($event, timer)"
                   ></ion-alert>
                 </ion-col>
-                <ion-col class="right" size="auto">
+                <ion-col class="right ion-no-padding" size="auto">
                   <ion-button color="primary" shape="round" fill="clear" class="delete" (click)="deleteTimer(timer)">
                     <ion-icon name="close-outline"></ion-icon>
                   </ion-button>
@@ -99,13 +105,13 @@
           <ion-card-content>
             <ion-buttons>
               <ion-button color="medium" (click)="pauseAllTimer()">
-                <ion-icon name="pause-outline" class="bigIcon"></ion-icon>
+                <ion-icon name="pause-outline" size="large"></ion-icon>
               </ion-button>
               <ion-button color="medium" (click)="resetAllTimer()">
-                <ion-icon name="refresh-outline" class="bigIcon"></ion-icon>
+                <ion-icon name="refresh-outline" size="large"></ion-icon>
               </ion-button>
               <ion-button color="medium" (click)="saveConfig()">
-                <ion-icon name="save-outline" class="bigIcon"></ion-icon>
+                <ion-icon name="save-outline" size="large"></ion-icon>
               </ion-button>
             </ion-buttons>
           </ion-card-content>
@@ -131,7 +137,8 @@
                 <ion-popover trigger="noteID" triggerAction="click" alignment="end">
                   <ng-template>
                     <ion-content class="ion-padding">
-                      L'ID correspond au numéro du timer (le premier étant le numéro donc la touche 1 du clavier ou du pavé numérique)
+                      L'ID correspond au numéro du timer (le premier étant le numéro donc la touche 1 du clavier ou du
+                      pavé numérique)
                     </ion-content>
                   </ng-template>
                 </ion-popover>
