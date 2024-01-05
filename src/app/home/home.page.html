@@ -4,7 +4,7 @@
       Timmeer
     </ion-title>
     <ion-button color="primary" id="nbEquipes" slot="end" fill="clear">
-      Nombre de minuteurs : {{tabTimer.length}}
+      Nombre de minuteurs : {{ tabTimer.length }}
     </ion-button>
     <ion-picker
       trigger="nbEquipes"
@@ -43,7 +43,7 @@
             <ion-card-title color="primary">
               <ion-row>
                 <ion-col class="center-vertical">
-                  {{timer.name}}
+                  {{ timer.name }}
                 </ion-col>
                 <ion-col class="right ion-no-padding" size="auto">
                   <ion-button [id]="'editButton' + timer.id" color="primary" shape="round" fill="clear" class="edit">
@@ -79,7 +79,7 @@
               [color]="'#d2d3d5'"
             ></round-progress>
             <div class="display-current">
-              {{formatTime(tabTime[i].currentTime)}} / {{formatTime(timer.maxTime)}}
+              {{ formatTime(tabTime[i].currentTime) }} / {{ formatTime(timer.maxTime) }}
             </div>
           </ion-card-content>
           <ion-card-content class="center-horizontal">
@@ -129,10 +129,8 @@
           <ion-card-content>
             <ion-list>
               <ion-item>
-                <ion-label class="center-vertical ion-text-wrap">
-                  <ion-icon name="play-outline" slot="start" class="raccourcisIcon"></ion-icon>
-                  Lancer le minuteur / mettre en pause un minuteur
-                </ion-label>
+                <ion-icon aria-hidden="true" name="play-outline" slot="start"></ion-icon>
+                Lancer le minuteur / mettre en pause un minuteur
                 <ion-note slot="end" id="noteID">Id</ion-note>
                 <ion-popover trigger="noteID" triggerAction="click" alignment="end">
                   <ng-template>
@@ -144,24 +142,18 @@
                 </ion-popover>
               </ion-item>
               <ion-item>
-                <ion-label class="center-vertical ion-text-wrap">
-                  <ion-icon name="pause-outline" slot="start" class="raccourcisIcon"></ion-icon>
-                  Mettre en pause tous les minuteurs
-                </ion-label>
+                <ion-icon aria-hidden="true" name="pause-outline" slot="start"></ion-icon>
+                Mettre en pause tous les minuteurs
                 <ion-note slot="end">Espace</ion-note>
               </ion-item>
               <ion-item>
-                <ion-label class="center-vertical ion-text-wrap">
-                  <ion-icon name="refresh-outline" slot="start" class="raccourcisIcon"></ion-icon>
-                  Réinitialiser tous les minuteurs
-                </ion-label>
+                <ion-icon aria-hidden="true" name="refresh-outline" slot="start"></ion-icon>
+                Réinitialiser tous les minuteurs
                 <ion-note slot="end">Echap</ion-note>
               </ion-item>
               <ion-item>
-                <ion-label class="center-vertical ion-text-wrap">
-                  <ion-icon name="save-outline" slot="start" class="raccourcisIcon"></ion-icon>
-                  Sauvegarder la configuration
-                </ion-label>
+                <ion-icon aria-hidden="true" name="save-outline" slot="start"></ion-icon>
+                Sauvegarder la configuration
                 <ion-note slot="end">S</ion-note>
               </ion-item>
             </ion-list>
