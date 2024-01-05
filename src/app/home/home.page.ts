@@ -4,6 +4,7 @@ import {TimeModel} from "../shared/models/timeModel";
 import {StorageService} from "../core/storage/storage.service";
 import {ToastService} from "../shared/class/toast/toast.service";
 import {Clipboard} from "@capacitor/clipboard";
+import {Platform} from "@ionic/angular";
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,8 @@ export class HomePage {
 
   constructor(
     private storageService: StorageService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public platform: Platform
   ) {
   }
 
@@ -62,7 +64,7 @@ export class HomePage {
 
   @HostListener('document:keydown', ['$event'])
   keyDownFunction(event: any) {
-    if (this.isKeyActive) {
+    if (this.isKeyActive && this.platform.is('desktop')) {
       if (event.code === 'Space') {
         event.preventDefault();
         this.pauseAllTimer();
