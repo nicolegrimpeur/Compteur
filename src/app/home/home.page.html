@@ -104,17 +104,14 @@
         <ion-card>
           <ion-card-content>
             <ion-buttons>
-              <ion-button color="medium" (click)="pauseAllTimer()">
+              <ion-button color="medium" (click)="pauseAllTimer()" title="Mettre tous les compteurs en pause">
                 <ion-icon name="pause-outline" size="large"></ion-icon>
               </ion-button>
-              <ion-button color="medium" (click)="resetAllTimer()">
+              <ion-button color="medium" (click)="resetAllTimer()" title="Reset tous les compteurs">
                 <ion-icon name="refresh-outline" size="large"></ion-icon>
               </ion-button>
-              <ion-button color="medium" (click)="saveConfig()">
+              <ion-button color="medium" (click)="saveConfig()" title="Sauvegarder la config dans le navigateur">
                 <ion-icon name="save-outline" size="large"></ion-icon>
-              </ion-button>
-              <ion-button color="medium" (click)="shareConfig()">
-                <ion-icon name="share-social-outline" size="large"></ion-icon>
               </ion-button>
             </ion-buttons>
           </ion-card-content>
@@ -177,7 +174,7 @@
         <ion-card>
           <ion-card-content>
             <ion-buttons>
-              <ion-button color="medium" id="importConfigButton">
+              <ion-button color="medium" id="importConfigButton" title="Importer la config">
                 <ion-icon name="download-outline" size="large"></ion-icon>
               </ion-button>
               <ion-alert
@@ -188,7 +185,7 @@
                 (willPresent)="isKeyActive = false"
                 (didDismiss)="importConfig($event)"
               ></ion-alert>
-              <ion-button color="medium" (click)="shareConfig()">
+              <ion-button color="medium" (click)="shareConfig()" title="Copier la config">
                 <ion-icon name="share-social-outline" size="large"></ion-icon>
               </ion-button>
             </ion-buttons>

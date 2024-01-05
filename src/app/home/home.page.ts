@@ -3,7 +3,6 @@ import {TimerModel} from "../shared/models/timerModel";
 import {TimeModel} from "../shared/models/timeModel";
 import {StorageService} from "../core/storage/storage.service";
 import {ToastService} from "../shared/class/toast/toast.service";
-import {Platform} from "@ionic/angular";
 import {Clipboard} from "@capacitor/clipboard";
 
 @Component({
@@ -40,8 +39,7 @@ export class HomePage {
 
   constructor(
     private storageService: StorageService,
-    private toastService: ToastService,
-    private platform: Platform
+    private toastService: ToastService
   ) {
   }
 
@@ -66,6 +64,7 @@ export class HomePage {
   keyDownFunction(event: any) {
     if (this.isKeyActive) {
       if (event.code === 'Space') {
+        event.preventDefault();
         this.pauseAllTimer();
       } else if (event.code === 'Escape') {
         this.resetAllTimer();
@@ -89,26 +88,28 @@ export class HomePage {
   }
 
   changeNbTimer(ev: any) {
-    const nbTimer = ev.detail.data.nbTimer.value;
-    if (nbTimer > this.tabTimer.length) {
-      for (let i = this.tabTimer.length + 1; i <= nbTimer; i++) {
-        this.tabTimer.push({
-          id: i,
-          name: 'Compteur ' + i,
-          maxTime: 60
-        });
-        this.tabTime.push({
-          currentTime: 60,
-          event: null
-        });
+    if (ev.detail.role === 'confirm') {
+      const nbTimer = ev.detail.data.nbTimer.value;
+      if (nbTimer > this.tabTimer.length) {
+        for (let i = this.tabTimer.length + 1; i <= nbTimer; i++) {
+          this.tabTimer.push({
+            id: i,
+            name: 'Compteur ' + i,
+            maxTime: 60
+          });
+          this.tabTime.push({
+            currentTime: 60,
+            event: null
+          });
+        }
+      } else {
+        for (let i = this.tabTimer.length; i > nbTimer; i--) {
+          this.tabTimer.pop();
+          this.tabTime.pop();
+        }
       }
-    } else {
-      for (let i = this.tabTimer.length; i > nbTimer; i--) {
-        this.tabTimer.pop();
-        this.tabTime.pop();
-      }
+      this.isKeyActive = true;
     }
-    this.isKeyActive = true;
   }
 
   editTimer(ev: any, timer: TimerModel) {
