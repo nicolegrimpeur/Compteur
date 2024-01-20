@@ -36,7 +36,8 @@ export class HomePage {
       })
     }
   ];
-  public isKeyActive = true;
+  public isKeyActive : boolean = true;
+  public isOneTimeTimer : boolean = false;
 
   constructor(
     private storageService: StorageService,
@@ -58,6 +59,13 @@ export class HomePage {
         });
       } else {
         this.storageService.saveConfig(this.tabTimer).then();
+      }
+    });
+    this.storageService.getIsOneTimeTimer().then((isOneTimeTimer) => {
+      if (isOneTimeTimer !== null) {
+        this.isOneTimeTimer = isOneTimeTimer;
+      } else {
+        this.storageService.saveIsOneTimeTimer(this.isOneTimeTimer).then();
       }
     });
   }
@@ -151,6 +159,9 @@ export class HomePage {
 
   launchTimer(timer: TimerModel) {
     if (!this.tabTime[timer.id - 1].event) {
+      if (this.isOneTimeTimer) {
+        this.pauseAllTimer();
+      }
       const handler = () => {
         if (this.tabTime[timer.id - 1].currentTime <= 0) {
           clearInterval(this.tabTime[timer.id - 1].event);
@@ -175,6 +186,13 @@ export class HomePage {
     this.tabTime[timer.id - 1].currentTime = timer.maxTime;
   }
 
+  oneTimeTimer() {
+    this.isOneTimeTimer = !this.isOneTimeTimer;
+    if (this.isOneTimeTimer) {
+      this.pauseAllTimer();
+    }
+  }
+
   getMinutesFromSeconds(seconds: number): number {
     return Math.floor(seconds / 60);
   }
@@ -189,6 +207,7 @@ export class HomePage {
   pauseAllTimer() {
     this.tabTime.forEach((time) => {
       clearInterval(time.event);
+      time.event = null;
     });
   }
 
@@ -199,6 +218,7 @@ export class HomePage {
   }
 
   saveConfig() {
+    this.storageService.saveIsOneTimeTimer(this.isOneTimeTimer).then().catch();
     this.storageService.saveConfig(this.tabTimer)
       .then(() => {
         this.toastService.presentToast({message: 'Configuration sauvegardée', color: 'success'}).then();
@@ -210,7 +230,9 @@ export class HomePage {
 
   importConfig(ev: any) {
     if (ev.detail.role === 'confirm') {
-      const config = JSON.parse(atob(ev.detail.data.values[0]));
+      const config = JSON.parse((atob(ev.detail.data.values[0])).split('|')[0]);
+      this.isOneTimeTimer = JSON.parse((atob(ev.detail.data.values[0])).split('|')[1] || "{}");
+      console.log("timer", this.isOneTimeTimer)
       if (config) {
         this.tabTimer = config;
         this.tabTime = [];
@@ -220,6 +242,8 @@ export class HomePage {
             event: null
           });
         });
+        this.storageService.saveIsOneTimeTimer(this.isOneTimeTimer).then().catch();
+        this.storageService.saveConfig(this.tabTimer).then().catch();
         this.toastService.presentToast({message: 'Configuration importée', color: 'success'}).then();
       } else {
         this.toastService.presentToast({message: 'Erreur lors de l\'importation', color: 'danger'}).then();
@@ -230,9 +254,8 @@ export class HomePage {
 
   shareConfig() {
     const url = window.location.href;
-    console.log(url);
     Clipboard.write({
-      string: btoa(JSON.stringify(this.tabTimer))
+      string: btoa(JSON.stringify(this.tabTimer) + '|' + this.isOneTimeTimer)
     })
       .then(() => {
         this.toastService.presentToast({

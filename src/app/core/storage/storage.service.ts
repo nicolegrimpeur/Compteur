@@ -18,4 +18,13 @@ export class StorageService {
     const config = await Preferences.get({key: 'config'});
     return JSON.parse(config.value!);
   }
+
+  async saveIsOneTimeTimer(value: boolean) {
+    await Preferences.set({key: 'isOneTimeTimer', value: JSON.stringify(value)});
+  }
+
+  async getIsOneTimeTimer(): Promise<boolean> {
+    const config = await Preferences.get({key: 'isOneTimeTimer'});
+    return JSON.parse(config.value!);
+  }
 }

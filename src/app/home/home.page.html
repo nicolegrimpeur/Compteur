@@ -110,8 +110,9 @@
               <ion-button color="medium" (click)="resetAllTimer()" title="Reset tous les compteurs">
                 <ion-icon name="refresh-outline" size="large"></ion-icon>
               </ion-button>
-              <ion-button color="medium" (click)="saveConfig()" title="Sauvegarder la config dans le navigateur">
-                <ion-icon name="save-outline" size="large"></ion-icon>
+              <ion-button color="medium" (click)="oneTimeTimer()"
+                          [title]="!isOneTimeTimer ? 'Désactiver le multi-timer' : 'Activer le multi-timer'">
+                <ion-icon [name]="!isOneTimeTimer ? 'checkmark-circle-outline' : 'ellipse-outline'" size="large"></ion-icon>
               </ion-button>
             </ion-buttons>
           </ion-card-content>
@@ -166,6 +167,12 @@
         <ion-card>
           <ion-card-content>
             <ion-buttons>
+              <ion-button color="medium" (click)="saveConfig()" title="Sauvegarder la config dans le navigateur">
+                <ion-icon name="save-outline" size="large"></ion-icon>
+              </ion-button>
+              <ion-button color="medium" (click)="shareConfig()" title="Copier la config">
+                <ion-icon name="share-social-outline" size="large"></ion-icon>
+              </ion-button>
               <ion-button color="medium" id="importConfigButton" title="Importer la config">
                 <ion-icon name="download-outline" size="large"></ion-icon>
               </ion-button>
@@ -177,9 +184,6 @@
                 (willPresent)="isKeyActive = false"
                 (didDismiss)="importConfig($event)"
               ></ion-alert>
-              <ion-button color="medium" (click)="shareConfig()" title="Copier la config">
-                <ion-icon name="share-social-outline" size="large"></ion-icon>
-              </ion-button>
             </ion-buttons>
           </ion-card-content>
         </ion-card>
